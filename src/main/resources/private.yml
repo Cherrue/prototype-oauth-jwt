@@ -1,0 +1,6 @@
+private:
+  key:
+    oauth:
+      github:
+        clientId:
+        clientSecret:

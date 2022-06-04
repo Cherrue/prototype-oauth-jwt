@@ -1,0 +1,13 @@
+spring:
+  config:
+    import: classpath:/private.yml
+  security:
+    oauth2:
+      client:
+        registration:
+          github:
+            clientId: ${private.key.oauth.github.clientId}
+            clientSecret: ${private.key.oauth.github.clientSecret}
+logging:
+  level:
+    root: info

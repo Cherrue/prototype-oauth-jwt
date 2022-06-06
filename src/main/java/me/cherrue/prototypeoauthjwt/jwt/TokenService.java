@@ -4,6 +4,7 @@ import io.jsonwebtoken.*;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import me.cherrue.prototypeoauthjwt.oauth.entity.Role;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.ConstructorBinding;
@@ -31,13 +32,14 @@ public class TokenService {
 
     /**
      * 토큰 생성
-     * @param uid 사용자 정보 중 키 값. 우리는 registrationId와 oAuthId를 사용한다.
+     * @param registrationId oauth 를 이용한 서비스 id. 복합키의 구성요소
+     * @param oAuthId oauth 로그인 시 제공받은 키 값. registrationId와 조합하면 키 값이 된다.
      * @param role 사용자 권한. 우리는 일반 사용자만 있다.
      * @return 생성된 토큰
      */
-    public Token generateToken(String uid, String role) {
-        Claims claims = Jwts.claims().setSubject(uid);
-        claims.put("role", role);
+    public Token generateToken(String registrationId, String oAuthId, Role role) {
+        Claims claims = Jwts.claims().setSubject(registrationId+oAuthId);
+        claims.put("role", role.getKey());
 
         Date now = new Date();
         return new Token(

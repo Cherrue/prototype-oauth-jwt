@@ -1,5 +1,6 @@
 package me.cherrue.prototypeoauthjwt.jwt;
 
+import me.cherrue.prototypeoauthjwt.oauth.entity.Role;
 import org.apache.tomcat.jni.Time;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -30,10 +31,10 @@ class TokenServiceTest {
      * 첫 부분은 암호화 형식을, 두 번째는 claims 을, 세 번째는 서명을 담는다.
      */
     public void generateToken() {
-        String uid = "hello world";
-        String role = "ROLE_USER";
+        String registrationId = "github";
+        String oAuthId = "1234";
         String algorithm = "HS256";
-        Token token = tokenService.generateToken(uid, role);
+        Token token = tokenService.generateToken(registrationId, oAuthId, Role.ROLE_USER);
         System.out.println(token.getToken());
         String[] strings = token.getToken().split("\\.");
 
@@ -43,7 +44,7 @@ class TokenServiceTest {
         String payload = new String(Base64.getDecoder().decode(strings[1]));
 
         assertThat(header).contains(algorithm);
-        assertThat(payload).contains(uid).contains(role);
+        assertThat(payload).contains(registrationId).contains(oAuthId).contains(Role.ROLE_USER.getKey());
     }
 
     @Test
@@ -55,7 +56,7 @@ class TokenServiceTest {
         Object tokenPeriod = ReflectionTestUtils.getField(tokenService, "tokenPeriod");
         ReflectionTestUtils.setField(tokenService, "tokenPeriod", 1000L);
 
-        Token token = tokenService.generateToken("verify token", "role");
+        Token token = tokenService.generateToken("registrationId", "oAuthId", Role.ROLE_USER);
         Thread.sleep(1000L);
 
         boolean isExpired = tokenService.verifyToken(token.getToken());

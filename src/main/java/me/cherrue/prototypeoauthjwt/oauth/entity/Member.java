@@ -1,11 +1,13 @@
 package me.cherrue.prototypeoauthjwt.oauth.entity;
 
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
 @NoArgsConstructor
+@Getter
 @Entity
 public class Member {
     @Id

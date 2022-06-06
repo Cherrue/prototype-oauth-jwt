@@ -2,6 +2,7 @@ package me.cherrue.prototypeoauthjwt.config;
 
 import lombok.RequiredArgsConstructor;
 import me.cherrue.prototypeoauthjwt.oauth.CustomOAuth2UserService;
+import me.cherrue.prototypeoauthjwt.oauth.OAuthSuccessHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
@@ -18,6 +19,7 @@ import static org.springframework.security.config.Customizer.withDefaults;
 @RequiredArgsConstructor
 public class SecurityConfiguration {
     private final CustomOAuth2UserService customOAuth2UserService;
+    private final OAuthSuccessHandler oAuthSuccessHandler;
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         // @formatter:off
@@ -38,6 +40,7 @@ public class SecurityConfiguration {
                 )
                 .httpBasic(withDefaults())
                 .oauth2Login(o -> o
+                        .successHandler(oAuthSuccessHandler)
                         .userInfoEndpoint()
                         .userService(customOAuth2UserService));
         // @formatter:on

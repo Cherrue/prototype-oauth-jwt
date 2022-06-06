@@ -1,5 +1,7 @@
-package me.cherrue.prototypeoauthjwt;
+package me.cherrue.prototypeoauthjwt.config;
 
+import lombok.RequiredArgsConstructor;
+import me.cherrue.prototypeoauthjwt.oauth.CustomOAuth2UserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
@@ -13,8 +15,9 @@ import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import static org.springframework.security.config.Customizer.withDefaults;
 
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class SecurityConfiguration {
-
+    private final CustomOAuth2UserService customOAuth2UserService;
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         // @formatter:off
@@ -34,7 +37,9 @@ public class SecurityConfiguration {
                         .ignoringAntMatchers("/h2-console/**").disable()
                 )
                 .httpBasic(withDefaults())
-                .oauth2Login();
+                .oauth2Login(o -> o
+                        .userInfoEndpoint()
+                        .userService(customOAuth2UserService));
         // @formatter:on
         return http.build();
     }

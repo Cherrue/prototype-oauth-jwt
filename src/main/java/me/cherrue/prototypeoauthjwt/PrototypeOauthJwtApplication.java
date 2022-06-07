@@ -1,6 +1,7 @@
 package me.cherrue.prototypeoauthjwt;
 
 import lombok.extern.slf4j.Slf4j;
+import me.cherrue.prototypeoauthjwt.oauth.entity.Member;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -13,14 +14,12 @@ import java.util.Collections;
 import java.util.Map;
 
 @RestController
-@Slf4j
 @SpringBootApplication
 public class PrototypeOauthJwtApplication {
 
     @GetMapping("/user")
-    public Map<String, Object> user(@AuthenticationPrincipal OAuth2User principal) {
-        log.info(principal.toString());
-        return Collections.singletonMap("name", principal.getAttribute("name"));
+    public Map<String, Object> user(@AuthenticationPrincipal Member principal) {
+        return Collections.singletonMap("name", principal.getName());
     }
 
     public static void main(String[] args) {
